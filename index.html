@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Найзуудын CS ЛИГ · Season 3</title>
+<meta name="description" content="Найзуудын CS2 лиг, Season 3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="px y">1UP <span>004200</span></div>
+  <div class="px p">HI-SCORE <span>999999</span></div>
+  <button id="music" class="px mbtn" type="button" aria-pressed="false">♪ MUSIC: OFF</button>
+</header>
+
+<section class="hero">
+  <div class="px c">CS2 · FRIENDS LEAGUE</div>
+  <h1 class="px">SEASON 3</h1>
+  <p>Хоёр улирал дууслаа. Шинэ тоглолт эхэлж байна. 4 баг аваргын цомын төлөө тулна.</p>
+
+  <div id="coin-box">
+    <button id="coin" class="px coin" type="button">INSERT COIN</button>
+    <div class="px blink hint">▼ ТОВЧЛООД ЭХЛЭ ▼</div>
+  </div>
+  <div id="ready" class="ready" hidden>
+    <div class="px g">PLAYER 1 READY!</div>
+    <div class="cd">
+      <span id="cd-label">ЭХЛЭХ ХҮРТЭЛ:</span> <b id="cd-text">--</b>
+    </div>
+    <a class="px go" href="#players">ДАРААГИЙН ТҮВШИН ▶</a>
+  </div>
+</section>
+
+<div class="strip px"><span>5V5</span><span>★</span><span>CS2</span><span>★</span><span>ЗӨВХӨН НАЙЗУУД</span><span>★</span><span>GL HF</span><span>★</span><span>SEASON 3</span></div>
+
+<section id="players" class="sec">
+  <div class="px stage">STAGE 1</div>
+  <h2 class="px">4 БАГ · SEASON 3</h2>
+  <div class="grid cards" id="team-grid"></div>
+</section>
+
+<section id="scores" class="sec">
+  <div class="px stage">STAGE 2</div>
+  <h2 class="px">HIGH SCORES</h2>
+  <div class="scores px">
+    <div><span class="y">1ST</span><span class="w">NONAME · S2</span><span class="p">АВАРГА</span></div>
+    <div><span>2ND</span><span class="w">D13 · S1</span><span class="p">АВАРГА</span></div>
+    <div><span>3RD</span><span class="w blink g">??? · S3 ДАРААГИЙН АВАРГА</span><span class="p">------</span></div>
+  </div>
+</section>
+
+<section id="maps" class="sec">
+  <div class="px stage">STAGE 3</div>
+  <h2 class="px">MAP СОНГО</h2>
+  <p class="lead">Дарж хас. Сүүлд үлдсэн нь тоглолтын map. Үлдсэн: <b id="remaining">7 map</b> <button id="reset" class="lnk" type="button">дахин эхлэх</button></p>
+  <div id="map-grid" class="grid maps"></div>
+</section>
+
+<section id="schedule" class="sec">
+  <div class="px stage">STAGE 4</div>
+  <h2 class="px">ХУВААРЬ</h2>
+  <div class="grid sched" id="schedule-grid"></div>
+</section>
+
+<footer class="foot px"><span>© CS2 ЛИГ · SEASON 3</span><span>GOOD GAME!</span></footer>
+
+<script src="script.js"></script>
+</body>
+</html>
