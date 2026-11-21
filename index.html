@@ -17,7 +17,7 @@
   <div class="wrap">
     <a class="brand" href="#top"><span class="mark">CS</span><span>Найзуудын лиг</span><em>S3</em></a>
     <nav class="links" aria-label="Хэсгүүд">
-      <a href="#teams">Багууд</a><a href="#mvp">MVP</a><a href="#bracket">Хуваарь</a><a href="#veto">Map veto</a><a href="#hall">Аваргууд</a>
+      <a href="#teams">Багууд</a><a href="#hall">Аваргууд</a><a href="#mvp">MVP</a><a href="#stats">ADR</a><a href="#bracket">Хуваарь</a><a href="#veto">Map veto</a>
     </nav>
     <span class="status" id="status"><i></i><span id="status-t">УДАХГҮЙ</span></span>
   </div>
@@ -54,9 +54,19 @@
     <div class="teams" id="team-grid"></div>
   </section>
 
+  <section id="hall" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">02 / Hall of fame</div><h2>Аварга багууд</h2></div>
+      <p>Улирал бүрийн аварга баг. Season 3-ын цомыг хэн өргөх вэ?</p>
+    </div>
+    <div class="mvp-zone">
+      <div class="rays" aria-hidden="true"></div>
+      <div class="mvp-stage" id="hof"></div>
+    </div>
+  </section>
   <section id="mvp" class="sec wrap">
     <div class="sec-head">
-      <div><div class="eyebrow">02 / Most valuable player</div><h2>Улирлын MVP</h2></div>
+      <div><div class="eyebrow">03 / Most valuable player</div><h2>Улирлын MVP</h2></div>
       <p>Улирал бүрийн хамгийн шилдэг тоглогч. Season 3-ын MVP хэн болох вэ?</p>
     </div>
     <div class="mvp-zone">
@@ -65,9 +75,44 @@
     </div>
   </section>
 
+  <section id="stats" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">04 / Статистик</div><h2>ADR leaderboard</h2></div>
+      <p>Тоглогч бүрийн дундаж ADR (Average Damage per Round). Тоглолт бүрийн дараа оноо нэмэгдэж, дундаж нь автоматаар бодогдоно.</p>
+    </div>
+    <div class="adr-box">
+      <div class="lb-top"><h3 class="admin-title">Эрэмбэ</h3><span class="lb-key">Дундаж ADR · тоглолтын тоо</span></div>
+      <div class="lb" id="lb" aria-live="polite"><div class="lb-empty">Ачаалж байна…</div></div>
+
+    <form class="admin" id="adr-form" autocomplete="off">
+      <div class="admin-top">
+        <h3 class="admin-title">Оноо оруулах</h3>
+        <label class="field">Тоглолт (заавал биш)
+          <input id="match-label" maxlength="60" placeholder="Жишээ: Week 1 · USUHUU vs JOEY">
+        </label>
+      </div>
+      <p class="admin-hint">Тоглосон тоглогчдын ADR-ийг бөглөөд хадгална. Хоосон үлдээсэн нь алгасагдана. Tab / Enter дарж дараагийн тоглогч руу шилжинэ.</p>
+      <div class="adr-groups" id="adr-groups"></div>
+      <div class="admin-actions">
+        <label class="field pin-field" id="pin-field">Админ PIN
+          <input id="pin" type="password" inputmode="numeric" autocomplete="off">
+        </label>
+        <button class="btn sm primary" type="submit" id="adr-save">Хадгалах</button>
+        <button class="btn sm ghost" type="button" id="adr-clear">Цэвэрлэх</button>
+        <button class="btn sm ghost" type="button" id="admin-logout" hidden>PIN гарах</button>
+        <span class="msg" id="panel-msg" role="status"></span>
+      </div>
+      <details class="recent-wrap">
+        <summary>Сүүлд оруулсан оноо</summary>
+        <ul class="recent" id="recent"></ul>
+      </details>
+    </form>
+    </div>
+  </section>
+
   <section id="bracket" class="sec wrap">
     <div class="sec-head">
-      <div><div class="eyebrow">03 / Хуваарь</div><h2>Тоглолтын хуваарь</h2></div>
+      <div><div class="eyebrow">05 / Хуваарь</div><h2>Тоглолтын хуваарь</h2></div>
       <p>Оноо, огноог <code>script.js</code> дотор оруулахад энд автоматаар гарна.</p>
     </div>
     <div class="bracket" id="bracket-grid"></div>
@@ -75,7 +120,7 @@
 
   <section id="veto" class="sec wrap">
     <div class="sec-head">
-      <div><div class="eyebrow">04 / Map veto</div><h2>Map сонголт</h2></div>
+      <div><div class="eyebrow">06 / Map veto</div><h2>Map сонголт</h2></div>
       <p>Хоёр баг ээлжилж map хасна. Хамгийн сүүлд үлдсэн map дээр тоглоно.</p>
     </div>
     <div class="veto-bar">
@@ -94,12 +139,6 @@
     <ol class="vlog" id="veto-log"></ol>
   </section>
 
-  <section id="hall" class="sec wrap">
-    <div class="sec-head">
-      <div><div class="eyebrow">05 / Hall of fame</div><h2>Аваргууд</h2></div>
-    </div>
-    <div class="hof" id="hof"></div>
-  </section>
 </main>
 
 <footer class="foot">
