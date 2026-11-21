@@ -265,8 +265,8 @@ h2{margin:12px 0 0;font:700 italic clamp(36px,5.4vw,60px)/1 var(--head);text-tra
 @media (max-width:700px){
   .lb-head{display:none}
   .lb-row{grid-template-columns:34px minmax(0,1fr) auto;grid-template-areas:"rk pl avg" "rk bar cnt";row-gap:10px;padding:14px 16px}
-  .rk{grid-area:rk;font-size:22px}.pl{grid-area:pl}.avg{grid-area:avg;font-size:26px}.bar{grid-area:bar}.cnt{grid-area:cnt;font-size:13px}
-  .cnt small{display:none}
+  .lb-row .rk{grid-area:rk;font-size:22px}.lb-row .pl{grid-area:pl}.lb-row .avg{grid-area:avg;font-size:26px}.lb-row .bar{grid-area:bar}.lb-row .cnt{grid-area:cnt;font-size:13px}
+  .lb-row .cnt small{display:none}
 }
 
 /* compact leaderboard + form in one box */
@@ -392,8 +392,17 @@ h2{margin:12px 0 0;font:700 italic clamp(36px,5.4vw,60px)/1 var(--head);text-tra
   .mvp-stage{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
 }
 @media (max-width:760px){
-  .links{display:none}
+  html{scroll-padding-top:112px}
+  .nav .wrap{flex-wrap:wrap;height:auto;column-gap:12px;row-gap:0;padding-top:12px}
   .status{margin-left:auto}
+  .links{order:3;width:100%;margin:6px 0 0;overflow-x:auto;scrollbar-width:none;gap:0}
+  .links::-webkit-scrollbar{display:none}
+  .links a{flex:none;padding:10px 14px 12px 0;font-size:13px}
+  .mvp-stage{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;margin-inline:-16px;padding:6px 16px 16px;scrollbar-width:none}
+  .mvp-stage::-webkit-scrollbar{display:none}
+  .mvp{flex:0 0 80%;scroll-snap-align:center}
+  .mvp:hover{transform:none}
+  .mvp-zone::after{content:"← Гүйлгэж үзнэ →";display:block;margin-top:4px;text-align:center;font:500 11px/1 var(--mono);letter-spacing:.16em;color:var(--m)}
   .hero{min-height:0}
   .hero-in{padding:56px 0 40px}
   .op{top:0;bottom:auto;opacity:.5}

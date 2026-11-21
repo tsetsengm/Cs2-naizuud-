@@ -1,7 +1,7 @@
 // ===== ТОХИРГОО: эндээс засна =====
 // Season 3 эхлэх огноо (ISO). Мэдэгдэхгүй бол null.
 // Жишээ: "2026-12-05T20:00:00+08:00" (Улаанбаатар = +08:00)
-const SEASON_START = null;
+const SEASON_START = "2026-11-26T20:00:00+08:00";
 
 const TEAMS = [
   { name: "USUHUU",  color: "#ffc400", poster: "assets/usuhuu.jpg",  players: ["USUHUU","ODKO","TUUGUU","BALU","SARAA"] },
@@ -301,7 +301,8 @@ function countdown() {
     return;
   }
   const start = new Date(SEASON_START);
-  $("#soon-note").textContent = "Эхлэх: " + start.toLocaleString("mn-MN", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  const ub = new Date(start.getTime() + 8 * 3600e3), p2 = (n) => String(n).padStart(2, "0"); // Улаанбаатарын цаг
+  $("#soon-note").textContent = `Эхлэх: ${ub.getUTCMonth() + 1} сарын ${ub.getUTCDate()} · ${p2(ub.getUTCHours())}:${p2(ub.getUTCMinutes())}`;
   const tick = () => {
     const diff = start - Date.now();
     if (diff <= 0) {
