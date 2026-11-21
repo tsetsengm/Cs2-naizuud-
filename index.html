@@ -4,69 +4,110 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Найзуудын CS ЛИГ · Season 3</title>
-<meta name="description" content="Найзуудын CS2 лиг, Season 3">
+<meta name="description" content="Найзуудын CS2 лиг, Season 3. 4 баг, 20 тоглогч, нэг цом.">
+<meta name="theme-color" content="#0b0b0d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rubik:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="top">
-  <div class="px y">1UP <span>004200</span></div>
-  <div class="px p">HI-SCORE <span>999999</span></div>
-  <button id="music" class="px mbtn" type="button" aria-pressed="false">♪ MUSIC: OFF</button>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="mark">CS</span><span>Найзуудын лиг</span><em>S3</em></a>
+    <nav class="links" aria-label="Хэсгүүд">
+      <a href="#teams">Багууд</a><a href="#mvp">MVP</a><a href="#bracket">Хуваарь</a><a href="#veto">Map veto</a><a href="#hall">Аваргууд</a>
+    </nav>
+    <span class="status" id="status"><i></i><span id="status-t">УДАХГҮЙ</span></span>
+  </div>
 </header>
 
-<section class="hero">
-  <div class="px c">CS2 · FRIENDS LEAGUE</div>
-  <h1 class="px">SEASON 3</h1>
-  <p>Хоёр улирал дууслаа. Шинэ тоглолт эхэлж байна. 4 баг аваргын цомын төлөө тулна.</p>
-
-  <div id="coin-box">
-    <button id="coin" class="px coin" type="button">INSERT COIN</button>
-    <div class="px blink hint">▼ ТОВЧЛООД ЭХЛЭ ▼</div>
-  </div>
-  <div id="ready" class="ready" hidden>
-    <div class="px g">PLAYER 1 READY!</div>
-    <div class="cd">
-      <span id="cd-label">ЭХЛЭХ ХҮРТЭЛ:</span> <b id="cd-text">--</b>
+<section class="hero" id="top">
+  <div class="sparks" id="sparks" aria-hidden="true"></div>
+  <img class="op op-ct" src="assets/hero-ct.jpg" alt="" width="600" height="520" aria-hidden="true">
+  <img class="op op-t" src="assets/hero-t.jpg" alt="" width="447" height="530" aria-hidden="true">
+  <div class="side-lbl ct" aria-hidden="true"><b>CT</b><span>Counter-Terrorists</span></div>
+  <div class="side-lbl t" aria-hidden="true"><b>T</b><span>Terrorists</span></div>
+  <div class="wrap hero-in">
+    <img class="hero-logo" src="assets/cs2-logo.jpg" alt="CS2" width="280" height="100">
+    <div class="kicker">5v5 · Найзуудын тэмцээн</div>
+    <h1><span class="pre">Найзуудын CS лиг</span>Season <b>03</b></h1>
+    <p class="sub">Хоёр улирал дууслаа. Одоо 4 баг аваргын цомын төлөө тулна.</p>
+    <div class="cd" id="cd" aria-live="polite"></div>
+    <div class="cta">
+      <a class="btn primary" href="#teams">Багуудыг харах</a>
+      <a class="btn ghost" href="#bracket">Хуваарь</a>
     </div>
-    <a class="px go" href="#players">ДАРААГИЙН ТҮВШИН ▶</a>
   </div>
+  <div class="wrap stats" id="stats"></div>
 </section>
 
-<div class="strip px"><span>5V5</span><span>★</span><span>CS2</span><span>★</span><span>ЗӨВХӨН НАЙЗУУД</span><span>★</span><span>GL HF</span><span>★</span><span>SEASON 3</span></div>
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
 
-<section id="players" class="sec">
-  <div class="px stage">STAGE 1</div>
-  <h2 class="px">4 БАГ · SEASON 3</h2>
-  <div class="grid cards" id="team-grid"></div>
-</section>
+<main>
+  <section id="teams" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">01 / Багууд</div><h2>Оролцогч багууд</h2></div>
+      <p>Season 3-т 4 баг, баг бүрт 5 тоглогч. Баг дээр дарвал тоглогчид нь эгнээ үүсгэнэ.</p>
+    </div>
+    <div class="teams" id="team-grid"></div>
+  </section>
 
-<section id="scores" class="sec">
-  <div class="px stage">STAGE 2</div>
-  <h2 class="px">HIGH SCORES</h2>
-  <div class="scores px">
-    <div><span class="y">1ST</span><span class="w">NONAME · S2</span><span class="p">АВАРГА</span></div>
-    <div><span>2ND</span><span class="w">D13 · S1</span><span class="p">АВАРГА</span></div>
-    <div><span>3RD</span><span class="w blink g">??? · S3 ДАРААГИЙН АВАРГА</span><span class="p">------</span></div>
+  <section id="mvp" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">02 / Most valuable player</div><h2>Улирлын MVP</h2></div>
+      <p>Улирал бүрийн хамгийн шилдэг тоглогч. Season 3-ын MVP хэн болох вэ?</p>
+    </div>
+    <div class="mvp-zone">
+      <div class="rays" aria-hidden="true"></div>
+      <div class="mvp-stage" id="mvp-grid"></div>
+    </div>
+  </section>
+
+  <section id="bracket" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">03 / Хуваарь</div><h2>Тоглолтын хуваарь</h2></div>
+      <p>Оноо, огноог <code>script.js</code> дотор оруулахад энд автоматаар гарна.</p>
+    </div>
+    <div class="bracket" id="bracket-grid"></div>
+  </section>
+
+  <section id="veto" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">04 / Map veto</div><h2>Map сонголт</h2></div>
+      <p>Хоёр баг ээлжилж map хасна. Хамгийн сүүлд үлдсэн map дээр тоглоно.</p>
+    </div>
+    <div class="veto-bar">
+      <div class="veto-teams">
+        <select id="veto-a" aria-label="Баг A"></select>
+        <span class="vs">VS</span>
+        <select id="veto-b" aria-label="Баг B"></select>
+      </div>
+      <div class="turn" id="veto-turn" aria-live="polite"></div>
+      <div class="veto-actions">
+        <button class="btn sm ghost" id="veto-undo" type="button">Буцаах</button>
+        <button class="btn sm ghost" id="veto-reset" type="button">Дахин эхлэх</button>
+      </div>
+    </div>
+    <div class="maps" id="map-grid"></div>
+    <ol class="vlog" id="veto-log"></ol>
+  </section>
+
+  <section id="hall" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">05 / Hall of fame</div><h2>Аваргууд</h2></div>
+    </div>
+    <div class="hof" id="hof"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span class="brand"><span class="mark">CS</span><span>Найзуудын лиг</span><em>S3</em></span>
+    <span class="mono">GL HF · GOOD GAME</span>
   </div>
-</section>
-
-<section id="maps" class="sec">
-  <div class="px stage">STAGE 3</div>
-  <h2 class="px">MAP СОНГО</h2>
-  <p class="lead">Дарж хас. Сүүлд үлдсэн нь тоглолтын map. Үлдсэн: <b id="remaining">7 map</b> <button id="reset" class="lnk" type="button">дахин эхлэх</button></p>
-  <div id="map-grid" class="grid maps"></div>
-</section>
-
-<section id="schedule" class="sec">
-  <div class="px stage">STAGE 4</div>
-  <h2 class="px">ХУВААРЬ</h2>
-  <div class="grid sched" id="schedule-grid"></div>
-</section>
-
-<footer class="foot px"><span>© CS2 ЛИГ · SEASON 3</span><span>GOOD GAME!</span></footer>
+</footer>
 
 <script src="script.js"></script>
 </body>
