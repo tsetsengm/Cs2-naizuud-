@@ -72,6 +72,11 @@ const NICKS = {
   "ZUGA":               "UUGANAA",
 };
 
+// Сайт дээр өөр нэрээр харуулах Steam нэр. Жишээ: "<3" гэж тоглосон ч "Gori" гэж гарна.
+const SHOW_AS = {
+  "<3": "Gori",
+};
+
 // Улирлын тойргийн тоо. Тойрог бүрт баг бүр бусад 3 багтай нэг удаа тоглоно → баг бүр 15 тоглолт, дараа нь финал.
 const ROUNDS = 5;
 
@@ -139,15 +144,6 @@ const MATCHES = [
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const findTeam = (n) => TEAMS.find((t) => t.name === n);
-
-// ---- Тоон үзүүлэлт ----
-const finalMatch = (SCHEDULE.find((r) => r.final) || {}).matches?.[0];
-$("#stats").innerHTML = [
-  [TEAMS.length, "Баг"],
-  [TEAMS.reduce((n, t) => n + t.players.length, 0), "Тоглогч"],
-  [MAPS.length, "Map pool"],
-  [(finalMatch && finalMatch.format) || "TBD", "Гранд финал"]
-].map(([v, l]) => `<div><b>${esc(v)}</b><span>${l}</span></div>`).join("");
 
 // ---- Hero: оч + parallax ----
 const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -463,7 +459,7 @@ function who(nick) {
   const r = ROSTER.get(String(NICK_MAP.get(n) || "").toLowerCase()) || ROSTER.get(n);
   if (!r) return { key: "~" + nick, name: nick, team: null, nick: "" };
   // Сайт дээр Steam нэрээр нь харуулна; лигийн нэр нь зөвхөн тоог нэгтгэх, багийн өнгөнд хэрэглэгдэнэ
-  return { key: r.name, name: nick, team: r.team, nick: "" };
+  return { key: r.name, name: SHOW_AS[nick] || nick, team: r.team, nick: "" };
 }
 
 const FIELDS = ["nick", "side", "k", "d", "a", "dmg", "rating", "kast", "ok", "tk", "ud", "ef"];
@@ -690,3 +686,42 @@ TEAMS.forEach((t) => {
 });
 
 countdown();
+
+// ---- Хэсгийн гарчиг: арын том дугаар (дүрс/фон) ----
+document.querySelectorAll(".sec-head > div").forEach((d) => {
+  d.dataset.n = ((d.querySelector(".eyebrow") || {}).textContent || "").match(/\d+/)?.[0] || "";
+});
+
+// ---- Scroll-оор гарч ирэх (нийтлэг хувь заяа: нэг бүлгийнхэн дараалан хамт гарна) ----
+if (!calm && "IntersectionObserver" in window) {
+  document.documentElement.classList.add("js");
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add("in");
+    io.unobserve(e.target);
+  }), { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+  [".sec-head", "#team-grid > .team", "#hl > .hl-card", ".st-box .tones", "#lb", ".track li", "#games .gm",
+   ".veto-bar", "#map-grid > .map", "#hof > .mvp", "#mvp-grid > .mvp"].forEach((sel) =>
+    document.querySelectorAll(sel).forEach((el, i) => {
+      el.dataset.rv = "";
+      el.style.setProperty("--d", i % 8);
+      io.observe(el);
+    }));
+}
+
+// ---- Цэс: одоо байгаа хэсгийг тодруулна + дээд талын scroll явцын шар зураас ----
+const navLinks = [...document.querySelectorAll(".links a")];
+if ("IntersectionObserver" in window) {
+  const spy = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) navLinks.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + e.target.id));
+  }), { rootMargin: "-45% 0px -50% 0px" });
+  document.querySelectorAll("main section[id]").forEach((s) => spy.observe(s));
+}
+let spTick = false;
+const setProgress = () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  $(".nav").style.setProperty("--sp", max > 0 ? (scrollY / max).toFixed(4) : 0);
+  spTick = false;
+};
+addEventListener("scroll", () => { if (!spTick) { spTick = true; requestAnimationFrame(setProgress); } }, { passive: true });
+setProgress();
