@@ -32,8 +32,8 @@ const SCHEDULE = [
 // MVP. Зургаа assets хавтсанд хийгээд нэрийг нь photo-д бичнэ.
 // Зураг байхгүй бол оронд нь дүрс харагдана.
 const MVPS = [
-  { season: "Season 01", name: "ODKO",   photo: "assets/mvp-odko.jpg" },
-  { season: "Season 02", name: "TUGSUU", photo: "assets/mvp-tugsuu.jpg" }
+  { season: "Season 01", name: "donk",   photo: "assets/mvp-odko.jpg" },
+  { season: "Season 02", name: "VPN",    photo: "assets/mvp-tugsuu.jpg" }
 ];
 
 // Аварга багууд. Лого/зургийг assets хавтсанд хийгээд нэрийг нь photo-д бичнэ.
@@ -69,13 +69,16 @@ const NICKS = {
   "ZUGA":               "UUGANAA",
 };
 
-// Тоглолт бүр. a/b = багийн нэр, sa/sb = оноо, side: "a" эсвэл "b".
+// Улирлын тойргийн тоо. Тойрог бүрт баг бүр бусад 3 багтай нэг удаа тоглоно → баг бүр 15 тоглолт, дараа нь финал.
+const ROUNDS = 5;
+
+// Тоглолт бүр. round = тойргийн дугаар (1-5) эсвэл "final". a/b = багийн нэр, sa/sb = оноо, side: "a" эсвэл "b".
 // Нэг талын 3+ тоглогч нэг багийнх бол a/b-ийн оронд "Team <багийн нэр>" өөрөө гарна.
 // Баганын дараалал: нэр, side, K, D, A, DMG (нийт damage), Rating (HLTV 2.1), KAST %, Open kill, Trade kill,
 //                   Util (гранатын damage), Flash (сохолсон дайсан). ADR = DMG ÷ раунд (өөрөө бодогдоно).
 // Мэдэгдэхгүй тоог null гэж бичнэ.
 const MATCHES = [
-  { date: "2026-11-25T22:18:47+08:00", map: "Nuke", a: "Team USUHUU", b: "Team UUGANAA", sa: 13, sb: 10, halves: "6:6 · 7:4", source: "xplay.gg",
+  { round: 1, date: "2026-11-25T22:18:47+08:00", map: "Nuke", a: "Team USUHUU", b: "Team UUGANAA", sa: 13, sb: 10, halves: "6:6 · 7:4", source: "xplay.gg",
     players: [
       ["donk",               "a", 24, 15, 4, 2524, 1.48, 86, 1, 4, 302,  1],
       ["deggui jaal usukku", "a", 21, 19, 5, 2425, 1.44, 73, 6, 4,   0,  4],
@@ -88,7 +91,7 @@ const MATCHES = [
       ["Gori",               "b", 14, 20, 4, 1430, 0.75, 60, 2, 6,  16,  0],
       ["Tsenherayga💙",      "b",  8, 21, 6, 1145, 0.57, 78, 0, 2,  68,  2]
     ] },
-  { date: "2026-11-25T21:39:39+08:00", map: "Ancient", a: "Team USUHUU", b: "Team UUGANAA", sa: 13, sb: 10, halves: "8:3 · 5:7", source: "xplay.gg",
+  { round: 1, date: "2026-11-25T21:39:39+08:00", map: "Ancient", a: "Team USUHUU", b: "Team UUGANAA", sa: 13, sb: 10, halves: "8:3 · 5:7", source: "xplay.gg",
     players: [
       ["..!.. VeNoM (0)))",  "a", 26, 13, 1, 2318, 1.55, 78, 2, 2,  76,  7],
       ["deggui jaal usukku", "a", 20, 17, 1, 2174, 1.26, 65, 4, 1,   3,  2],
@@ -235,7 +238,8 @@ function mysteryCard({ ribbon, sub, icon, shape, names }) {
 $("#mvp-grid").innerHTML = MVPS.map((m, i) => gloryCard({
   no: i + 1, ribbon: m.season + " · MVP", name: m.name, sub: "Most valuable player",
   photo: m.photo, alt: m.season + " MVP " + m.name, icon: crown, shape: silhouette
-})).join("") + mysteryCard({ ribbon: "Season 03 · MVP", sub: "Хэн болох вэ?", icon: crown, shape: silhouette, names: TEAMS.flatMap((t) => t.players) });
+})).join("") + mysteryCard({ ribbon: "Season 03 · MVP", sub: "Хэн болох вэ?", icon: crown, shape: silhouette,
+  names: TEAMS.flatMap((t) => t.players).map((p) => Object.keys(NICKS).find((k) => NICKS[k] === p) || p) });
 
 $("#hof").innerHTML = CHAMPIONS.map((c, i) => gloryCard({
   no: i + 1, ribbon: c.season + " · Аварга", name: c.team, sub: "Champions",
@@ -534,37 +538,95 @@ const ubTime = (d) => {
   const u = new Date(d.getTime() + 8 * 3600e3), p2 = (n) => String(n).padStart(2, "0");
   return `${u.getUTCFullYear()}.${p2(u.getUTCMonth() + 1)}.${p2(u.getUTCDate())} · ${p2(u.getUTCHours())}:${p2(u.getUTCMinutes())}`;
 };
-function renderGames() {
-  $("#games").innerHTML = games.map((g) => {
-    const best = {};
-    G_COLS.filter((k) => k !== "pm").forEach((k) => {
-      const vals = g.ps.map((p) => p[k]).filter((v) => v != null);
-      if (vals.length) best[k] = LOW_BETTER.has(k) ? Math.min(...vals) : Math.max(...vals);
-    });
-    const mvp = [...g.ps].sort((x, y) => (y.rating ?? 0) - (x.rating ?? 0))[0];
-    const draw = g.sa === g.sb;
-    const res = (won) => (draw ? "" : won ? "win" : "lose");
-    const team = (side) => {
-      const name = side === "a" ? g.na : g.nb, t = side === "a" ? g.ta : g.tb, won = side === "a" ? g.sa > g.sb : g.sb > g.sa;
-      const rows = g.ps.filter((p) => p.side === side).sort((x, y) => (y.rating ?? 0) - (x.rating ?? 0) || y.k - x.k);
-      return `<div class="g-team"><h4${t ? ` style="--col:${t.color}"` : ""}>${esc(name)} <span class="res ${res(won)}">${draw ? "🤝 Тэнцсэн" : won ? "✅ Хожсон" : "❌ Хожигдсон"}</span></h4>
-        <div class="tbl-wrap"><table class="sb"><thead><tr><th scope="col" class="pc">Тоглогч</th>${G_COLS.map((k) => headTh(k)).join("")}</tr></thead>
-        <tbody>${rows.map((p) => `<tr>${whoCell(p)}${G_COLS.map((k) => cell(k, p[k], {
-          star: k !== "pm" && best[k] > 0 && p[k] === best[k],
-          txt: k === "adr" && p.adr != null ? String(Math.round(p.adr)) : undefined
-        })).join("")}</tr>`).join("")}</tbody></table></div></div>`;
-    };
-    return `<article class="game" id="${g.id}">
-      <header class="g-head" style="--img:url(assets/maps/${esc(g.map.toLowerCase())}.jpg)">
-        <div class="g-meta"><span class="g-map">🗺️ ${esc(g.map)}</span><span>📅 ${ubTime(g.time)}</span>${g.halves ? `<span>⏱️ Хагас: ${esc(g.halves)}</span>` : ""}<span>🔢 ${g.rounds} раунд</span></div>
-        <div class="g-score"><span class="tn">${esc(g.na)}</span><b class="${res(g.sa > g.sb)}">${g.sa}</b><i>:</i><b class="${res(g.sb > g.sa)}">${g.sb}</b><span class="tn">${esc(g.nb)}</span></div>
-        ${mvp && mvp.rating != null ? `<div class="g-mvp">👑 MVP · ${esc(mvp.name)} · ${mvp.rating.toFixed(2)}</div>` : "<div></div>"}
-      </header>
-      ${team("a")}${team("b")}
-      <p class="g-foot">★ = тоглолтын шилдэг тоо${g.source ? " · Эх сурвалж: " + esc(g.source) : ""}</p>
-    </article>`;
-  }).join("") || `<p class="lb-empty">Одоогоор тоглолт алга</p>`;
+// Формат: тойрог бүрт баг бүр бусад 3 багтай нэг нэг удаа тоглоно (6 тоглолт).
+// 5 тойрог → баг бүр 15 тоглолт, дараа нь финал.
+const PER_ROUND = (TEAMS.length * (TEAMS.length - 1)) / 2;
+let gameFilter = ""; // багийн нэр, эсвэл "" = бүгд
+
+function gameBody(g) {
+  const best = {};
+  G_COLS.filter((k) => k !== "pm").forEach((k) => {
+    const vals = g.ps.map((p) => p[k]).filter((v) => v != null);
+    if (vals.length) best[k] = LOW_BETTER.has(k) ? Math.min(...vals) : Math.max(...vals);
+  });
+  const draw = g.sa === g.sb;
+  const team = (side) => {
+    const name = side === "a" ? g.na : g.nb, t = side === "a" ? g.ta : g.tb, won = side === "a" ? g.sa > g.sb : g.sb > g.sa;
+    const rows = g.ps.filter((p) => p.side === side).sort((x, y) => (y.rating ?? 0) - (x.rating ?? 0) || y.k - x.k);
+    return `<div class="g-team"><h4${t ? ` style="--col:${t.color}"` : ""}>${esc(name)} <span class="res ${draw ? "" : won ? "win" : "lose"}">${draw ? "🤝 Тэнцсэн" : won ? "✅ Хожсон" : "❌ Хожигдсон"}</span></h4>
+      <div class="tbl-wrap"><table class="sb"><thead><tr><th scope="col" class="pc">Тоглогч</th>${G_COLS.map((k) => headTh(k)).join("")}</tr></thead>
+      <tbody>${rows.map((p) => `<tr>${whoCell(p)}${G_COLS.map((k) => cell(k, p[k], {
+        star: k !== "pm" && best[k] > 0 && p[k] === best[k],
+        txt: k === "adr" && p.adr != null ? String(Math.round(p.adr)) : undefined
+      })).join("")}</tr>`).join("")}</tbody></table></div></div>`;
+  };
+  const meta = [g.halves && "⏱️ Хагас " + esc(g.halves), "🔢 " + g.rounds + " раунд", g.source && "Эх сурвалж: " + esc(g.source), "★ = тоглолтын шилдэг тоо"];
+  return `${team("a")}${team("b")}<p class="g-foot">${meta.filter(Boolean).join(" · ")}</p>`;
 }
+
+function gameRow(g) {
+  const mvp = [...g.ps].sort((x, y) => (y.rating ?? 0) - (x.rating ?? 0))[0];
+  const wl = (s, o) => (s > o ? "win" : s < o ? "lose" : "");
+  const side = (t, name, s, o) => `<span class="gm-t ${wl(s, o)}"${t ? ` style="--col:${t.color}"` : ""}><i class="dot"></i><span>${esc(name)}</span></span>`;
+  return `<details class="gm" id="${g.id}">
+    <summary>
+      <span class="gm-map" style="--img:url(assets/maps/${esc(g.map.toLowerCase())}.jpg)"><b>${esc(g.map)}</b><small>${ubTime(g.time)}</small></span>
+      <span class="gm-score">${side(g.ta, g.na, g.sa, g.sb)}<b class="${wl(g.sa, g.sb)}">${g.sa}</b><i>:</i><b class="${wl(g.sb, g.sa)}">${g.sb}</b>${side(g.tb, g.nb, g.sb, g.sa)}</span>
+      ${mvp && mvp.rating != null ? `<span class="gm-mvp" title="Тоглолтын MVP (хамгийн өндөр rating)">👑 ${esc(mvp.name)}<em>${mvp.rating.toFixed(2)}</em></span>` : "<span></span>"}
+      <span class="gm-chev" aria-hidden="true">▾</span>
+    </summary>
+    <div class="gm-body">${gameBody(g)}</div>
+  </details>`;
+}
+
+const roundOf = (g) => (g.round === "final" ? "final" : +g.round || 0);
+const roundCount = (r) => games.filter((g) => roundOf(g) === r).length;
+
+function renderTrack() {
+  const steps = Array.from({ length: ROUNDS }, (_, i) => i + 1);
+  const cur = steps.find((r) => roundCount(r) < PER_ROUND) ?? "final";
+  const finalDone = roundCount("final") > 0;
+  $("#track").innerHTML = `<ol class="track">${steps.map((r) => {
+    const n = roundCount(r), done = n >= PER_ROUND;
+    return `<li class="${done ? "done" : ""}${r === cur ? " cur" : ""}" style="--p:${Math.min(n / PER_ROUND, 1) * 100}%">
+      <b>${r}-р тойрог</b><small>${done ? "✓ Дууссан" : `${n} / ${PER_ROUND}`}</small></li>`;
+  }).join("")}<li class="fin${cur === "final" ? " cur" : ""}${finalDone ? " done" : ""}" style="--p:${finalDone ? 100 : 0}%"><b>🏆 Финал</b><small>${finalDone ? "✓ Дууссан" : "Тойргуудын дараа"}</small></li></ol>
+    <p class="track-note">Нийт <b>${games.filter((g) => roundOf(g) !== "final").length} / ${PER_ROUND * ROUNDS}</b> тоглолт · баг бүр ${(TEAMS.length - 1) * ROUNDS} тоглолт · ${ROUNDS} тойрог → финал</p>`;
+}
+
+function renderFilter() {
+  const n = (t) => games.filter((g) => g.ta === t || g.tb === t).length;
+  $("#gm-filter").innerHTML = `<button type="button" data-t="" aria-pressed="${!gameFilter}">Бүгд<small>${games.length}</small></button>`
+    + TEAMS.map((t) => `<button type="button" data-t="${esc(t.name)}" aria-pressed="${gameFilter === t.name}" style="--col:${t.color}">${esc(t.name)}<small>${n(t)}</small></button>`).join("");
+}
+$("#gm-filter").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-t]");
+  if (!b) return;
+  gameFilter = b.dataset.t;
+  renderFilter(); renderGames();
+});
+
+function renderGames() {
+  const list = games.filter((g) => !gameFilter || (g.ta && g.ta.name === gameFilter) || (g.tb && g.tb.name === gameFilter));
+  const keys = [...new Set(list.map(roundOf))].sort((a, b) => (a === "final" ? -1 : b === "final" ? 1 : (b || 99) - (a || 99)));
+  $("#games").innerHTML = keys.map((r) => {
+    const rows = list.filter((g) => roundOf(g) === r);
+    const label = r === "final" ? "🏆 Финал" : r ? `${r}-р тойрог` : "Бусад тоглолт";
+    const count = r && r !== "final" ? `${roundCount(r)} / ${PER_ROUND} тоглолт` : `${rows.length} тоглолт`;
+    return `<section class="rd"><h4 class="rd-head"><span>${label}</span><span class="rd-n">${count}</span></h4>${rows.map(gameRow).join("")}</section>`;
+  }).join("") || `<p class="lb-empty">${gameFilter ? "Энэ баг одоогоор тоглоогүй" : "Одоогоор тоглолт алга"}</p>`;
+}
+
+// #game-N руу очих холбоос дарахад тэр тоглолтыг задалж харуулна
+function openGame(id) {
+  if (!document.getElementById(id)) { gameFilter = ""; renderFilter(); renderGames(); }
+  const d = document.getElementById(id);
+  if (d) d.open = true;
+}
+document.addEventListener("click", (e) => {
+  const a = e.target.closest('a[href^="#game-"]');
+  if (a) openGame(a.getAttribute("href").slice(1));
+});
 
 // ---- Тайлбар ----
 $("#legend").innerHTML = ["rating", "adr", "kd", "k", "d", "a", "pm", "kast", "ok", "tk", "ud", "ef"]
@@ -574,7 +636,8 @@ const steamName = new Map([...Object.entries(NICKS)].reverse().map(([nick, p]) =
 const idle = TEAMS.flatMap((t) => t.players).filter((p) => !board.some((s) => s.key === p)).map((p) => steamName.get(p) || p);
 $("#st-sum").textContent = `${games.length} тоглолт · ${board.length} тоглогч`;
 $("#idle").textContent = idle.length ? `⏳ Одоогоор статистикгүй: ${idle.join(", ")}` : "";
-renderHighlights(); renderBoard(); renderGames();
+renderHighlights(); renderBoard(); renderTrack(); renderFilter(); renderGames();
+if (location.hash.startsWith("#game-")) openGame(location.hash.slice(1));
 
 // ---- Багийн карт: тоглосон map-ууд ----
 TEAMS.forEach((t) => {
