@@ -17,7 +17,7 @@
   <div class="wrap">
     <a class="brand" href="#top"><span class="mark">CS</span><span>Найзуудын лиг</span><em>S3</em></a>
     <nav class="links" aria-label="Хэсгүүд">
-      <a href="#teams">Багууд</a><a href="#hall">Аваргууд</a><a href="#mvp">MVP</a><a href="#board">Статистик</a><a href="#bracket">Хуваарь</a><a href="#veto">Map veto</a>
+      <a href="#teams">Багууд</a><a href="#board">Статистик</a><a href="#veto">Map veto</a><a href="#hall">Аваргууд</a><a href="#mvp">MVP</a>
     </nav>
     <span class="status" id="status"><i></i><span id="status-t">УДАХГҮЙ</span></span>
   </div>
@@ -33,11 +33,11 @@
     <img class="hero-logo" src="assets/cs2-logo.jpg" alt="CS2" width="280" height="100">
     <div class="kicker">5v5 · Найзуудын тэмцээн</div>
     <h1><span class="pre">Найзуудын CS лиг</span>Season <b>03</b></h1>
-    <p class="sub">Хоёр улирал дууслаа. Одоо 4 баг аваргын цомын төлөө тулна.</p>
+    <p class="sub">Season 3 эхэллээ! 4 баг аваргын цомын төлөө тулалдаж байна.</p>
     <div class="cd" id="cd" aria-live="polite"></div>
     <div class="cta">
       <a class="btn primary" href="#teams">Багуудыг харах</a>
-      <a class="btn ghost" href="#bracket">Хуваарь</a>
+      <a class="btn ghost" href="#board">Статистик</a>
     </div>
   </div>
   <div class="wrap stats" id="stats"></div>
@@ -49,35 +49,14 @@
   <section id="teams" class="sec wrap">
     <div class="sec-head">
       <div><div class="eyebrow">01 / Багууд</div><h2>Оролцогч багууд</h2></div>
-      <p>Season 3-т 4 баг, баг бүрт 5 тоглогч. Баг дээр дарвал тоглогчид нь эгнээ үүсгэнэ.</p>
+      <p>Season 3-т 4 баг, баг бүрт 5 тоглогч. Баг дээр дарвал тоглогчид болон тоглосон map-ууд нь гарч ирнэ.</p>
     </div>
     <div class="teams" id="team-grid"></div>
   </section>
 
-  <section id="hall" class="sec wrap">
-    <div class="sec-head">
-      <div><div class="eyebrow">02 / Hall of fame</div><h2>Аварга багууд</h2></div>
-      <p>Улирал бүрийн аварга баг. Season 3-ын цомыг хэн өргөх вэ?</p>
-    </div>
-    <div class="mvp-zone">
-      <div class="rays" aria-hidden="true"></div>
-      <div class="mvp-stage" id="hof"></div>
-    </div>
-  </section>
-  <section id="mvp" class="sec wrap">
-    <div class="sec-head">
-      <div><div class="eyebrow">03 / Most valuable player</div><h2>Улирлын MVP</h2></div>
-      <p>Улирал бүрийн хамгийн шилдэг тоглогч. Season 3-ын MVP хэн болох вэ?</p>
-    </div>
-    <div class="mvp-zone">
-      <div class="rays" aria-hidden="true"></div>
-      <div class="mvp-stage" id="mvp-grid"></div>
-    </div>
-  </section>
-
   <section id="board" class="sec wrap">
     <div class="sec-head">
-      <div><div class="eyebrow">04 / Статистик</div><h2>Тоглогчийн статистик</h2></div>
+      <div><div class="eyebrow">02 / Статистик</div><h2>Тоглогчийн статистик</h2></div>
       <p>Тоглолт бүрийн scoreboard-оос бодогдоно. Баганын нэр дээр дарж эрэмбэлнэ, хулганаа барьвал тайлбар гарна.</p>
     </div>
     <div class="st-box">
@@ -95,17 +74,9 @@
     <div class="games" id="games"></div>
   </section>
 
-  <section id="bracket" class="sec wrap">
-    <div class="sec-head">
-      <div><div class="eyebrow">05 / Хуваарь</div><h2>Тоглолтын хуваарь</h2></div>
-      <p>Оноо, огноог <code>script.js</code> дотор оруулахад энд автоматаар гарна.</p>
-    </div>
-    <div class="bracket" id="bracket-grid"></div>
-  </section>
-
   <section id="veto" class="sec wrap">
     <div class="sec-head">
-      <div><div class="eyebrow">06 / Map veto</div><h2>Map сонголт</h2></div>
+      <div><div class="eyebrow">03 / Map veto</div><h2>Map сонголт</h2></div>
       <p>Хоёр баг ээлжилж map хасна. Хамгийн сүүлд үлдсэн map дээр тоглоно.</p>
     </div>
     <div class="veto-bar">
@@ -122,6 +93,27 @@
     </div>
     <div class="maps" id="map-grid"></div>
     <ol class="vlog" id="veto-log"></ol>
+  </section>
+
+  <section id="hall" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">04 / Hall of fame</div><h2>Аварга багууд</h2></div>
+      <p>Улирал бүрийн аварга баг. Season 3-ын цомыг хэн өргөх вэ?</p>
+    </div>
+    <div class="mvp-zone">
+      <div class="rays" aria-hidden="true"></div>
+      <div class="mvp-stage" id="hof"></div>
+    </div>
+  </section>
+  <section id="mvp" class="sec wrap">
+    <div class="sec-head">
+      <div><div class="eyebrow">05 / Most valuable player</div><h2>Улирлын MVP</h2></div>
+      <p>Улирал бүрийн хамгийн шилдэг тоглогч. Season 3-ын MVP хэн болох вэ?</p>
+    </div>
+    <div class="mvp-zone">
+      <div class="rays" aria-hidden="true"></div>
+      <div class="mvp-stage" id="mvp-grid"></div>
+    </div>
   </section>
 
 </main>

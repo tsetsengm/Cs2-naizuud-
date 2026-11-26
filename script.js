@@ -1,7 +1,7 @@
 // ===== ТОХИРГОО: эндээс засна =====
 // Season 3 эхлэх огноо (ISO). Мэдэгдэхгүй бол null.
 // Жишээ: "2026-12-05T20:00:00+08:00" (Улаанбаатар = +08:00)
-const SEASON_START = "2026-11-26T20:00:00+08:00";
+const SEASON_START = "2026-11-25T21:00:00+08:00";
 
 const TEAMS = [
   { name: "USUHUU",  color: "#ffc400", poster: "assets/usuhuu.jpg",  players: ["USUHUU","ODKO","TUUGUU","BALU","SARAA"] },
@@ -13,8 +13,8 @@ const TEAMS = [
 // Map бүрийн зураг: assets/maps/<нэр жижиг үсгээр>.jpg
 const MAPS = ["Mirage","Inferno","Nuke","Ancient","Anubis","Dust2","Cache"];
 
-// Тоглолт: a, b = багийн нэр. Оноо орвол sa, sb-д бичнэ (жишээ: sa: 13, sb: 9).
-// format: "BO1" / "BO3" гэх мэт (заавал биш). date: "12/05 · 20:00" гэх мэт, эсвэл null.
+// Хуваарийн хэсэг сайтаас хасагдсан. Энэ жагсаалтаас одоо зөвхөн map veto-гийн анхны 2 баг (эхний тоглолт)
+// болон дээд талын "Гранд финал" формат (format: "BO3") авагдана.
 const SCHEDULE = [
   { stage: "1-р долоо хоног", date: null, matches: [
     { a: "USUHUU", b: "JOEY" },
@@ -70,11 +70,12 @@ const NICKS = {
 };
 
 // Тоглолт бүр. a/b = багийн нэр, sa/sb = оноо, side: "a" эсвэл "b".
+// Нэг талын 3+ тоглогч нэг багийнх бол a/b-ийн оронд "Team <багийн нэр>" өөрөө гарна.
 // Баганын дараалал: нэр, side, K, D, A, DMG (нийт damage), Rating (HLTV 2.1), KAST %, Open kill, Trade kill,
 //                   Util (гранатын damage), Flash (сохолсон дайсан). ADR = DMG ÷ раунд (өөрөө бодогдоно).
 // Мэдэгдэхгүй тоог null гэж бичнэ.
 const MATCHES = [
-  { date: "2026-11-25T22:18:47+08:00", map: "Nuke", a: "Team 2", b: "Team 1", sa: 13, sb: 10, halves: "6:6 · 7:4", source: "xplay.gg",
+  { date: "2026-11-25T22:18:47+08:00", map: "Nuke", a: "Team USUHUU", b: "Team UUGANAA", sa: 13, sb: 10, halves: "6:6 · 7:4", source: "xplay.gg",
     players: [
       ["donk",               "a", 24, 15, 4, 2524, 1.48, 86, 1, 4, 302,  1],
       ["deggui jaal usukku", "a", 21, 19, 5, 2425, 1.44, 73, 6, 4,   0,  4],
@@ -86,6 +87,19 @@ const MATCHES = [
       ["BYWOO",              "b", 16, 17, 1, 1564, 1.00, 65, 4, 1,  25,  4],
       ["Gori",               "b", 14, 20, 4, 1430, 0.75, 60, 2, 6,  16,  0],
       ["Tsenherayga💙",      "b",  8, 21, 6, 1145, 0.57, 78, 0, 2,  68,  2]
+    ] },
+  { date: "2026-11-25T21:39:39+08:00", map: "Ancient", a: "Team USUHUU", b: "Team UUGANAA", sa: 13, sb: 10, halves: "8:3 · 5:7", source: "xplay.gg",
+    players: [
+      ["..!.. VeNoM (0)))",  "a", 26, 13, 1, 2318, 1.55, 78, 2, 2,  76,  7],
+      ["deggui jaal usukku", "a", 20, 17, 1, 2174, 1.26, 65, 4, 1,   3,  2],
+      ["STM",                "a", 12, 13, 1, 1285, 0.89, 69, 1, 1,  68,  9],
+      ["donk",               "a", 11, 17, 8, 1665, 0.89, 73, 2, 2, 129,  4],
+      ["Sweetymoon",         "a",  9, 18, 6, 1231, 0.70, 69, 0, 2,   9,  2],
+      [".",                  "b", 27, 18, 4, 2641, 1.66, 73, 7, 3,  44,  4],
+      ["ZUGA♠️♥️♣️♦",        "b", 17, 13, 3, 1607, 1.20, 73, 3, 3,  48,  4],
+      ["Tsenherayga💙",      "b", 12, 16, 4, 1558, 0.87, 69, 1, 0, 163,  2],
+      ["Gori",               "b", 11, 16, 3, 1414, 0.79, 52, 3, 0,  24, 19],
+      ["BYWOO",              "b", 11, 15, 3, 1226, 0.78, 60, 0, 2,   0,  3]
     ] }
 ];
 // ===================================
@@ -151,7 +165,9 @@ $("#team-grid").innerHTML = TEAMS.map((t, i) => {
         <ul class="roster">${t.players.map((p, k) => `<li data-k="${k}" style="--x:${pts[k][0]}%;--y:${pts[k][1]}%">${esc(p)}</li>`).join("")}</ul>
       </div>
     </div>
-    <button class="team-toggle" type="button" aria-expanded="false">Тоглогчид ▸</button>
+    <div class="team-rec" data-team="${esc(t.name)}"></div>
+    <div class="team-games" data-team="${esc(t.name)}"></div>
+    <button class="team-toggle" type="button" aria-expanded="false">Тоглогч, map ▸</button>
   </div>
 </article>`;
 }).join("");
@@ -164,7 +180,7 @@ function setActiveTeam(card) {
     const on = c === card, btn = c.querySelector(".team-toggle");
     c.classList.toggle("active", on);
     btn.setAttribute("aria-expanded", on);
-    btn.textContent = on ? "Хаах ✕" : "Тоглогчид ▸";
+    btn.textContent = on ? "Хаах ✕" : "Тоглогч, map ▸";
   });
   teamGrid.classList.toggle("focus", !!card);
   if (calm) return;
@@ -245,29 +261,6 @@ if (!calm) {
   });
 }
 
-// ---- Хуваарь ----
-function side(name, score, other) {
-  const t = findTeam(name);
-  const scored = score != null && other != null;
-  const cls = !t ? "tbd" : scored ? (score > other ? "win" : score < other ? "lose" : "") : "";
-  return `<div class="side ${cls}">
-    <span class="tag"${t ? ` style="--col:${t.color}"` : ""}>${t ? esc(name[0]) : "?"}</span>
-    <span class="nm">${esc(name)}</span>
-    <span class="sc">${score ?? "–"}</span>
-  </div>`;
-}
-let matchNo = 0;
-$("#bracket-grid").innerHTML = SCHEDULE.map((r) => `
-<div class="round${r.final ? " final" : ""}">
-  <h4><span>${esc(r.stage)}</span><span>${esc(r.date || "Огноо удахгүй")}</span></h4>
-  <div class="matches">${r.matches.map((m) => `
-    <div class="match">
-      <div class="match-meta"><span>${r.final ? "★ Аваргын тоглолт" : "Тоглолт " + ++matchNo}</span><span>${esc(m.format || "")}</span></div>
-      ${side(m.a, m.sa, m.sb)}${side(m.b, m.sb, m.sa)}
-    </div>`).join("")}
-  </div>
-</div>`).join("");
-
 // ---- Map veto ----
 const MAP_BG = {
   Mirage: ["#c9a26b", "#5b3f22"], Inferno: ["#b8562f", "#3a160d"], Nuke: ["#5f8496", "#16232b"],
@@ -323,50 +316,75 @@ selA.onchange = () => onTeamChange(selA, selB);
 selB.onchange = () => onTeamChange(selB, selA);
 renderVeto();
 
-// ---- Тоолуур ----
-// LCD самбар: огноо тодорхойгүй бол тоонууд эргэлдэж "Coming soon" хүлээлт үүсгэнэ.
-$("#cd").innerHTML = `<div class="soon${SEASON_START ? "" : " tba"}">
-  <div class="soon-top"><i class="led"></i><span id="soon-t">Season 03 · Coming soon</span><i class="led"></i></div>
-  <div class="lcd">${["Өдөр", "Цаг", "Мин", "Сек"].map((l, i) =>
-    `${i ? '<b class="colon">:</b>' : ""}<div class="seg"><span class="ghost">88</span><span class="dig">--</span><small>${l}</small></div>`).join("")}</div>
-  <div class="soon-bar"><i></i></div>
-  <div class="soon-note" id="soon-note"></div>
-</div>`;
-const digs = [...$("#cd").querySelectorAll(".dig")];
-const setDigs = (vals) => digs.forEach((d, i) => (d.textContent = vals[i]));
+// ---- Тоолуур / LIVE самбар ----
+// Эхлэхээс өмнө: LCD тоолуур буцаж тоолно. Эхэлсний дараа: LIVE самбар — эхэлснээс хойших хугацаа,
+// тоглолтын тоо, тэргүүлэгч, сүүлийн тоглолт. (Файлын төгсгөлд, статистик бодогдсоны дараа дуудагдана.)
+const p2 = (n) => String(n).padStart(2, "0");
+const lcdHtml = () => `<div class="lcd">${["Өдөр", "Цаг", "Мин", "Сек"].map((l, i) =>
+  `${i ? '<b class="colon">:</b>' : ""}<div class="seg"><span class="ghost">88</span><span class="dig">--</span><small>${l}</small></div>`).join("")}</div>`;
+const setDigs = (vals) => $("#cd").querySelectorAll(".dig").forEach((d, i) => (d.textContent = vals[i]));
+const split = (ms) => { const x = Math.max(0, Math.floor(ms / 1000)); return [Math.floor(x / 86400), Math.floor(x / 3600) % 24, Math.floor(x / 60) % 60, x % 60]; };
+
+function liveBoard(start) {
+  const last = games[0];
+  const kills = games.reduce((n, g) => n + g.ps.reduce((m, p) => m + (p.k || 0), 0), 0);
+  const lead = board.filter((s) => s.rating != null).sort((a, b) => b.rating - a.rating)[0];
+  const wl = (a, b) => (a > b ? "w" : a < b ? "l" : "");
+  $("#cd").innerHTML = `<div class="soon live">
+    <div class="soon-top"><i class="led"></i><span><b class="live-tag">LIVE</b>Season 03 явагдаж байна</span><i class="led"></i></div>
+    ${lcdHtml()}
+    <div class="lcd-cap">⏱️ Улирал эхэлснээс хойш</div>
+    <div class="live-chips">
+      <span>🎮 <b>${games.length}</b> тоглолт</span>
+      <span>🔫 <b>${kills}</b> kill</span>
+      ${lead ? `<span>⭐ Тэргүүлэгч <b>${esc(lead.name)}</b> ${lead.rating.toFixed(2)}</span>` : ""}
+    </div>
+    ${last ? `<a class="live-last" href="#${last.id}" style="--img:url(assets/maps/${esc(last.map.toLowerCase())}.jpg)">
+      <small>Сүүлийн тоглолт · ${ubTime(last.time)}</small>
+      <span class="ll-map">🗺️ ${esc(last.map)}</span>
+      <span class="ll-sc"><em>${esc(last.na)}</em><b class="${wl(last.sa, last.sb)}">${last.sa}</b>:<b class="${wl(last.sb, last.sa)}">${last.sb}</b><em>${esc(last.nb)}</em></span>
+      <span class="ll-go">Scoreboard →</span>
+    </a>` : `<div class="soon-note">Эхэллээ! GL HF</div>`}
+    <div class="soon-bar"><i></i></div>
+  </div>`;
+  $("#status").classList.add("live");
+  const tick = () => {
+    const t = split(Date.now() - start);
+    setDigs(t.map(p2));
+    $("#status-t").textContent = `LIVE · ${t[0] + 1}-Р ӨДӨР`;
+  };
+  tick();
+  if (!calm) setInterval(tick, 1000);
+}
+
 function countdown() {
   if (!SEASON_START) {
-    $("#soon-note").textContent = "Эхлэх огноо удахгүй зарлагдана";
+    $("#cd").innerHTML = `<div class="soon tba">
+      <div class="soon-top"><i class="led"></i><span>Season 03 · Coming soon</span><i class="led"></i></div>
+      ${lcdHtml()}<div class="soon-bar"><i></i></div><div class="soon-note">Эхлэх огноо удахгүй зарлагдана</div></div>`;
     $("#status-t").textContent = "COMING SOON";
     if (calm) return setDigs(["--", "--", "--", "--"]);
-    const rnd = () => String(Math.floor(Math.random() * 100)).padStart(2, "0");
-    setInterval(() => {
-      const scramble = Date.now() % 4000 < 1600;
-      setDigs(scramble ? digs.map(rnd) : ["--", "--", "--", "--"]);
-    }, 70);
+    const rnd = () => p2(Math.floor(Math.random() * 100));
+    setInterval(() => setDigs(Date.now() % 4000 < 1600 ? [1, 2, 3, 4].map(rnd) : ["--", "--", "--", "--"]), 70);
     return;
   }
   const start = new Date(SEASON_START);
-  const ub = new Date(start.getTime() + 8 * 3600e3), p2 = (n) => String(n).padStart(2, "0"); // Улаанбаатарын цаг
-  $("#soon-note").textContent = `Эхлэх: ${ub.getUTCMonth() + 1} сарын ${ub.getUTCDate()} · ${p2(ub.getUTCHours())}:${p2(ub.getUTCMinutes())}`;
+  if (Date.now() >= start) return liveBoard(start);
+  const ub = new Date(start.getTime() + 8 * 3600e3); // Улаанбаатарын цаг
+  $("#cd").innerHTML = `<div class="soon">
+    <div class="soon-top"><i class="led"></i><span>Season 03 · Тоолол эхэллээ</span><i class="led"></i></div>
+    ${lcdHtml()}<div class="soon-bar"><i></i></div>
+    <div class="soon-note">Эхлэх: ${ub.getUTCMonth() + 1} сарын ${ub.getUTCDate()} · ${p2(ub.getUTCHours())}:${p2(ub.getUTCMinutes())}</div></div>`;
   const tick = () => {
     const diff = start - Date.now();
-    if (diff <= 0) {
-      setDigs(["00", "00", "00", "00"]);
-      $("#soon-t").textContent = "Season 03 · LIVE";
-      $("#soon-note").textContent = "Эхэллээ! GL HF";
-      $("#status").classList.add("live"); $("#status-t").textContent = "LIVE";
-      return;
-    }
-    const x = Math.floor(diff / 1000), p = (n) => String(n).padStart(2, "0");
-    setDigs([p(Math.floor(x / 86400)), p(Math.floor(x / 3600) % 24), p(Math.floor(x / 60) % 60), p(x % 60)]);
-    $("#soon-t").textContent = "Season 03 · Тоолол эхэллээ";
-    $("#status-t").textContent = Math.floor(x / 86400) + " ӨДӨР ҮЛДЛЭЭ";
+    if (diff <= 0) return liveBoard(start);
+    const t = split(diff);
+    setDigs(t.map(p2));
+    $("#status-t").textContent = t[0] + " ӨДӨР ҮЛДЛЭЭ";
     setTimeout(tick, 1000);
   };
   tick();
 }
-countdown();
 
 // ===== Тоглолтын статистик =====
 // Өгөгдөл: дээрх MATCHES. Энд юу ч засах шаардлагагүй.
@@ -423,8 +441,16 @@ const games = MATCHES.map((m) => {
     const won = p.side === "a" ? m.sa > m.sb : m.sb > m.sa;
     return { ...p, ...who(p.nick), pm: p.k - p.d, adr: p.dmg != null && rounds ? p.dmg / rounds : null, won };
   });
-  return { ...m, rounds, ps, time: new Date(m.date) };
-}).sort((x, y) => y.time - x.time);
+  // Нэг талын 3+ тоглогч нэг багийнх бол тэр багийн тоглолт гэж үзнэ
+  const sideTeam = (side) => {
+    const n = new Map();
+    ps.forEach((p) => { if (p.side === side && p.team) n.set(p.team, (n.get(p.team) || 0) + 1); });
+    const [t, c] = [...n].sort((x, y) => y[1] - x[1])[0] || [];
+    return c >= 3 ? t : null;
+  };
+  const ta = sideTeam("a"), tb = sideTeam("b");
+  return { ...m, rounds, ps, time: new Date(m.date), ta, tb, na: ta ? "Team " + ta.name : m.a, nb: tb ? "Team " + tb.name : m.b };
+}).sort((x, y) => y.time - x.time).map((g, i) => ({ ...g, id: "game-" + (MATCHES.length - i) }));
 
 function aggregate() {
   const by = new Map();
@@ -519,19 +545,19 @@ function renderGames() {
     const draw = g.sa === g.sb;
     const res = (won) => (draw ? "" : won ? "win" : "lose");
     const team = (side) => {
-      const name = side === "a" ? g.a : g.b, won = side === "a" ? g.sa > g.sb : g.sb > g.sa;
+      const name = side === "a" ? g.na : g.nb, t = side === "a" ? g.ta : g.tb, won = side === "a" ? g.sa > g.sb : g.sb > g.sa;
       const rows = g.ps.filter((p) => p.side === side).sort((x, y) => (y.rating ?? 0) - (x.rating ?? 0) || y.k - x.k);
-      return `<div class="g-team"><h4>${esc(name)} <span class="res ${res(won)}">${draw ? "🤝 Тэнцсэн" : won ? "✅ Хожсон" : "❌ Хожигдсон"}</span></h4>
+      return `<div class="g-team"><h4${t ? ` style="--col:${t.color}"` : ""}>${esc(name)} <span class="res ${res(won)}">${draw ? "🤝 Тэнцсэн" : won ? "✅ Хожсон" : "❌ Хожигдсон"}</span></h4>
         <div class="tbl-wrap"><table class="sb"><thead><tr><th scope="col" class="pc">Тоглогч</th>${G_COLS.map((k) => headTh(k)).join("")}</tr></thead>
         <tbody>${rows.map((p) => `<tr>${whoCell(p)}${G_COLS.map((k) => cell(k, p[k], {
           star: k !== "pm" && best[k] > 0 && p[k] === best[k],
           txt: k === "adr" && p.adr != null ? String(Math.round(p.adr)) : undefined
         })).join("")}</tr>`).join("")}</tbody></table></div></div>`;
     };
-    return `<article class="game">
+    return `<article class="game" id="${g.id}">
       <header class="g-head" style="--img:url(assets/maps/${esc(g.map.toLowerCase())}.jpg)">
         <div class="g-meta"><span class="g-map">🗺️ ${esc(g.map)}</span><span>📅 ${ubTime(g.time)}</span>${g.halves ? `<span>⏱️ Хагас: ${esc(g.halves)}</span>` : ""}<span>🔢 ${g.rounds} раунд</span></div>
-        <div class="g-score"><span class="tn ${res(g.sa > g.sb)}">${esc(g.a)}</span><b class="${res(g.sa > g.sb)}">${g.sa}</b><i>:</i><b class="${res(g.sb > g.sa)}">${g.sb}</b><span class="tn ${res(g.sb > g.sa)}">${esc(g.b)}</span></div>
+        <div class="g-score"><span class="tn">${esc(g.na)}</span><b class="${res(g.sa > g.sb)}">${g.sa}</b><i>:</i><b class="${res(g.sb > g.sa)}">${g.sb}</b><span class="tn">${esc(g.nb)}</span></div>
         ${mvp && mvp.rating != null ? `<div class="g-mvp">👑 MVP · ${esc(mvp.name)} · ${mvp.rating.toFixed(2)}</div>` : "<div></div>"}
       </header>
       ${team("a")}${team("b")}
@@ -549,3 +575,26 @@ const idle = TEAMS.flatMap((t) => t.players).filter((p) => !board.some((s) => s.
 $("#st-sum").textContent = `${games.length} тоглолт · ${board.length} тоглогч`;
 $("#idle").textContent = idle.length ? `⏳ Одоогоор статистикгүй: ${idle.join(", ")}` : "";
 renderHighlights(); renderBoard(); renderGames();
+
+// ---- Багийн карт: тоглосон map-ууд ----
+TEAMS.forEach((t) => {
+  const mine = games.filter((g) => g.ta === t || g.tb === t).map((g) => {
+    const isA = g.ta === t, us = isA ? g.sa : g.sb, them = isA ? g.sb : g.sa;
+    return { g, us, them, opp: isA ? g.nb : g.na, r: us > them ? "win" : us < them ? "lose" : "draw" };
+  });
+  const w = mine.filter((x) => x.r === "win").length, l = mine.filter((x) => x.r === "lose").length;
+  const sel = `[data-team="${CSS.escape(t.name)}"]`;
+  $(".team-rec" + sel).innerHTML = mine.length
+    ? `🗺️ ${mine.length} map · <b class="c-g">${w}W</b> – <b class="c-r">${l}L</b>`
+    : "🗺️ Одоогоор тоглоогүй";
+  $(".team-games" + sel).innerHTML = mine.length
+    ? `<h4>Тоглосон map</h4><ul>${mine.map((x, i) => `<li style="--i:${i}">
+        <a class="tg ${x.r}" href="#${x.g.id}" style="--img:url(assets/maps/${esc(x.g.map.toLowerCase())}.jpg)" aria-label="${esc(x.g.map)}, ${esc(x.opp)}-тай ${x.us}:${x.them}, scoreboard харах">
+          <span class="tg-map">${esc(x.g.map)}</span>
+          <span class="tg-vs">vs ${esc(x.opp)} · ${ubTime(x.g.time).split(" · ")[0]}</span>
+          <span class="tg-sc"><b>${x.us}:${x.them}</b><small>${x.r === "win" ? "✅ Хожсон" : x.r === "lose" ? "❌ Хожигдсон" : "🤝 Тэнцсэн"}</small></span>
+        </a></li>`).join("")}</ul>`
+    : `<p class="tg-none">Тоглолт нэмэгдэхээр энд map-ууд гарна.</p>`;
+});
+
+countdown();
