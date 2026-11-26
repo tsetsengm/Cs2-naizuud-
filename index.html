@@ -17,7 +17,7 @@
   <div class="wrap">
     <a class="brand" href="#top"><span class="mark">CS</span><span>Найзуудын лиг</span><em>S3</em></a>
     <nav class="links" aria-label="Хэсгүүд">
-      <a href="#teams">Багууд</a><a href="#hall">Аваргууд</a><a href="#mvp">MVP</a><a href="#stats">ADR</a><a href="#bracket">Хуваарь</a><a href="#veto">Map veto</a>
+      <a href="#teams">Багууд</a><a href="#hall">Аваргууд</a><a href="#mvp">MVP</a><a href="#board">Статистик</a><a href="#bracket">Хуваарь</a><a href="#veto">Map veto</a>
     </nav>
     <span class="status" id="status"><i></i><span id="status-t">УДАХГҮЙ</span></span>
   </div>
@@ -75,39 +75,24 @@
     </div>
   </section>
 
-  <section id="stats" class="sec wrap">
+  <section id="board" class="sec wrap">
     <div class="sec-head">
-      <div><div class="eyebrow">04 / Статистик</div><h2>ADR leaderboard</h2></div>
-      <p>Тоглогч бүрийн дундаж ADR (Average Damage per Round). Тоглолт бүрийн дараа оноо нэмэгдэж, дундаж нь автоматаар бодогдоно.</p>
+      <div><div class="eyebrow">04 / Статистик</div><h2>Тоглогчийн статистик</h2></div>
+      <p>Тоглолт бүрийн scoreboard-оос бодогдоно. Баганын нэр дээр дарж эрэмбэлнэ, хулганаа барьвал тайлбар гарна.</p>
     </div>
-    <div class="adr-box">
-      <div class="lb-top"><h3 class="admin-title">Эрэмбэ</h3><span class="lb-key">Дундаж ADR · тоглолтын тоо</span></div>
-      <div class="lb" id="lb" aria-live="polite"><div class="lb-empty">Ачаалж байна…</div></div>
-
-    <form class="admin" id="adr-form" autocomplete="off">
-      <div class="admin-top">
-        <h3 class="admin-title">Оноо оруулах</h3>
-        <label class="field">Тоглолт (заавал биш)
-          <input id="match-label" maxlength="60" placeholder="Жишээ: Week 1 · USUHUU vs JOEY">
-        </label>
-      </div>
-      <p class="admin-hint">Тоглосон тоглогчдын ADR-ийг бөглөөд хадгална. Хоосон үлдээсэн нь алгасагдана. Tab / Enter дарж дараагийн тоглогч руу шилжинэ.</p>
-      <div class="adr-groups" id="adr-groups"></div>
-      <div class="admin-actions">
-        <label class="field pin-field" id="pin-field">Админ PIN
-          <input id="pin" type="password" inputmode="numeric" autocomplete="off">
-        </label>
-        <button class="btn sm primary" type="submit" id="adr-save">Хадгалах</button>
-        <button class="btn sm ghost" type="button" id="adr-clear">Цэвэрлэх</button>
-        <button class="btn sm ghost" type="button" id="admin-logout" hidden>PIN гарах</button>
-        <span class="msg" id="panel-msg" role="status"></span>
-      </div>
-      <details class="recent-wrap">
-        <summary>Сүүлд оруулсан оноо</summary>
-        <ul class="recent" id="recent"></ul>
+    <div class="st-box">
+      <div class="st-top"><h3 class="st-title">🏆 Эрэмбэ</h3><span class="lb-key" id="st-sum"></span></div>
+      <div class="hl" id="hl"></div>
+      <div class="tones" aria-label="Өнгөний тайлбар"><span><i class="c-g">●</i> Сайн</span><span><i class="c-y">●</i> Дундаж</span><span><i class="c-r">●</i> Сул</span><span><i class="c-y">★</i> Тоглолтын шилдэг</span></div>
+      <div class="tbl-wrap"><table class="sb" id="lb"></table></div>
+      <p class="idle" id="idle"></p>
+      <details class="legend">
+        <summary>❓ Үзүүлэлт бүр юу гэсэн үг вэ?</summary>
+        <div class="legend-grid" id="legend"></div>
       </details>
-    </form>
     </div>
+    <div class="st-top mt"><h3 class="st-title">🎮 Тоглолтууд</h3></div>
+    <div class="games" id="games"></div>
   </section>
 
   <section id="bracket" class="sec wrap">
